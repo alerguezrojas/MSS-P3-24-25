@@ -1,6 +1,14 @@
 package preprocessing;
 
+/**
+ * A preprocessor that scales numeric data to the range [0, 1].
+ */
 public class MinMaxScaler implements Preprocessor {
+    /**
+     * Applies min-max normalization to each column.
+     * @param data original numeric data
+     * @return normalized data in range [0, 1]
+     */
     @Override
     public double[][] transform(double[][] data) {
         int rows = data.length;
@@ -34,4 +42,5 @@ public class MinMaxScaler implements Preprocessor {
         return scaled;
     }
 }
+
 

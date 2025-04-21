@@ -2,6 +2,10 @@ import preprocessing.MinMaxScaler;
 
 import java.util.Scanner;
 
+/**
+ * Entry point to demonstrate usage of the extended Dataset class.
+ * Loads data, applies preprocessing, splits into train/test and saves output files.
+ */
 public class Main {
     public static void main(String[] args) {
         Dataset fullDataset = new Dataset();
@@ -11,7 +15,8 @@ public class Main {
             System.out.print("CSV file path: ");
             String file = sc.nextLine();
 
-            boolean[] isNumeric = {true, true, true, true}; // Para iris.csv
+            // Indicates which attributes are numeric (adjust according to the dataset)
+            boolean[] isNumeric = {true, true, true, true}; // Ejemplo: iris.csv
             fullDataset.loadFromCSV(file, isNumeric);
 
             System.out.println("Original full dataset:");
@@ -19,12 +24,12 @@ public class Main {
                 System.out.println(inst);
             }
 
-            // Aplicamos preprocesador real
+            // Apply normalization with MinMaxScaler
             fullDataset.setPreprocessor(new MinMaxScaler());
             fullDataset.preprocessAll();
 
-            // División del dataset en entrenamiento y prueba
-            Dataset[] split = fullDataset.splitTrainTest(0.7); // 70% train, 30% test
+            // Divide the dataset into 70% training, 30% test
+            Dataset[] split = fullDataset.splitTrainTest(0.7);
             Dataset trainSet = split[0];
             Dataset testSet = split[1];
 
@@ -49,3 +54,4 @@ public class Main {
         }
     }
 }
+
