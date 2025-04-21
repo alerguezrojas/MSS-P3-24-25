@@ -48,12 +48,11 @@ public class Dataset {
         }
 
         weights = new double[attributes.size()];
-        Arrays.fill(weights, 1.0); // Peso por defecto
+        Arrays.fill(weights, 1.0);
     }
 
     public void saveToCSV(String filename) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            // Header
             for (int i = 0; i < attributes.size(); i++) {
                 writer.write(attributes.get(i).getName() + ",");
             }
@@ -73,16 +72,12 @@ public class Dataset {
         }
     }
 
-    public void setPreprocessor(Preprocessor preprocessor) {
-        this.preprocessor = preprocessor;
-    }
-
     public void preprocessAll() {
         if (preprocessor != null) {
-            double[][] values = instances.stream()
+            double[][] data = instances.stream()
                     .map(Instance::getNumericValues)
                     .toArray(double[][]::new);
-            double[][] processed = preprocessor.transform(values);
+            double[][] processed = preprocessor.transform(data);
             for (int i = 0; i < instances.size(); i++) {
                 instances.get(i).setNumericValues(processed[i]);
             }
@@ -97,15 +92,27 @@ public class Dataset {
         test.attributes.addAll(this.attributes);
         train.instances.addAll(instances.subList(0, splitPoint));
         test.instances.addAll(instances.subList(splitPoint, instances.size()));
+        train.setPreprocessor(this.preprocessor);
+        test.setPreprocessor(this.preprocessor);
+        train.setWeights(this.weights);
+        test.setWeights(this.weights);
         return new Dataset[]{train, test};
+    }
+
+    public List<Instance> getInstances() {
+        return instances;
     }
 
     public List<Attribute> getAttributes() {
         return attributes;
     }
 
-    public List<Instance> getInstances() {
-        return instances;
+    public void setPreprocessor(Preprocessor preprocessor) {
+        this.preprocessor = preprocessor;
+    }
+
+    public Preprocessor getPreprocessor() {
+        return preprocessor;
     }
 
     public double[] getWeights() {
